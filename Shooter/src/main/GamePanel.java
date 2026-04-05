@@ -138,6 +138,12 @@ public class GamePanel extends JPanel{
 			}
 		}
 	}
+	
+	public void updateGame() {
+		updateAnimationTick();
+		setAnimation();
+		updatePosition();
+	}
 
 	private void setAnimation() {
 		
