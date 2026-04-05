@@ -16,11 +16,26 @@ import javax.swing.JPanel;
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
+
+
+import static utils.Constants.PlayerConstants.*;
+import static utils.Constants.Directions.*;
+
+
 public class GamePanel extends JPanel{
 	
 	private MouseInputs MouseInputs;
 	private float xDelta = 100, yDelta = 100;
-	private BufferedImage img, subImg;
+	
+	
+	private BufferedImage img;
+	private BufferedImage[][]Player_Animations;
+	private int animationTick, animationIndex, animationSpeed = 20;
+	
+	
+	private int playerAction = IDLE;
+	private int playerDirection = -1;
+	private boolean moving = false;
 	
 	
 	
@@ -32,18 +47,39 @@ public class GamePanel extends JPanel{
 		addKeyListener(new KeyboardInputs(this));
 		addMouseListener(new MouseInputs(this));
 		addMouseMotionListener(new MouseInputs(this));
+		
 		ImportImage();
+		loadAnimations();
 
 	}
 	
+	private void loadAnimations() {
+		Player_Animations = new BufferedImage[7][4];
+		
+		for(int j = 0; j < Player_Animations.length; j++) {		
+			
+			for(int i = 0; i < Player_Animations[j].length; i++) {
+				Player_Animations[j][i] = img.getSubimage(i*32, j*32, 32, 32);
+		
+			}
+		}
+		
+	}
+
 	private void ImportImage() {
-		InputStream is = getClass().getResourceAsStream("/Char.png");
+		InputStream is = getClass().getResourceAsStream("/Player_01.png");
 		
 		try {
 			img= ImageIO.read(is);
 
 		} catch (IOException e){
 			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -56,32 +92,71 @@ public class GamePanel extends JPanel{
 		
 	}
 
-	public void changeXDelta(int value) {
-		this.xDelta += value;
-	}
-	public void changeYDelta(int value) {
-		this.yDelta += value;
-
-	}
-	
-	public void setRectPos(int x, int y) {
-		this.xDelta = x;
-		this.yDelta = y;
+	public void setDirection(int direction) {
+		this.playerDirection = direction;
+		moving = true;
 			
 	}
 	
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
+	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    //subImg = img.getSubimage(X, Y, [x,y dimensiones de la imagen a mostrar]); 
-
+	    updateAnimationTick();
 	    
-	    subImg = img.getSubimage(2*32, 2*32, 32, 32); 
+	    setAnimation();
+	    updatePosition();
 	    
-
 	    
-	    g.drawImage(subImg, (int)xDelta, (int)yDelta, 64, 64, null);
+	    
+	    g.drawImage(Player_Animations[playerAction][animationIndex], (int)xDelta, (int)yDelta, 100, 100, null);
 
+	}
+
+	private void updatePosition() {
+		
+		if(moving) {
+			switch(playerDirection){
+			case LEFT:
+				xDelta-=5;
+				break;
+			case UP:
+				yDelta-=5;
+				break;
+			case RIGHT:
+				xDelta+=5;
+				break;
+			case DOWN:
+				yDelta+=5;
+				break;
+			
+			}
+		}
+	}
+
+	private void setAnimation() {
+		
+		if(moving) {
+			playerAction = MOVING;
+		} else {
+			playerAction = IDLE;
+		}
+	}
+
+	private void updateAnimationTick() {
+		animationTick++;
+		if(animationTick >= animationSpeed) {
+			animationTick = 0;
+			animationIndex++;
+			if(animationIndex >= GetSpriteAmount(playerAction)) {
+				animationIndex = 0;
+			}
+		}
 	}
 
 
