@@ -8,6 +8,8 @@ import static utils.Constants.PlayerConstants.ATTACKING;
 import static utils.Constants.PlayerConstants.JUMPING;
 import static utils.Constants.PlayerConstants.HIT;
 
+import static utils.HelpMethods.CanMoveHere;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import main.Game;
 import utils.LoadSave;
 
 public class Player extends Entity {
@@ -44,14 +47,25 @@ public class Player extends Entity {
 	private boolean moving    = false;
 	private boolean attacking = false;
 	private boolean jumping   = false;
+	
+	
+	private int[][] lvlData;
+	
+	private float xDrawOffset = 6 * Game.SCALE;
+	private float yDrawOffset = 0 * Game.SCALE;
+	
+	
 
-	public Player(float x, float y) {
-		super(x, y);
+	public Player(float x, float y, int width, int height) {
+		super(x, y, width, height);
 		loadAnimations();
+		
+		initializeHitbox(x, y,  30 * Game.SCALE, 36 * Game.SCALE);
 	}
 
 	public void update() {
 		updatePosition();
+		
 		setAnimation();
 		updateAnimationTick();
 	}
@@ -59,7 +73,8 @@ public class Player extends Entity {
 	public void render(Graphics g) {
 		// La fila del spritesheet depende de la accion Y la direccion
 		int row = GetSpriteRow(playerAction, facingRight);
-		g.drawImage(Player_Animations[row][animationIndex], (int) x, (int) y, 100, 100, null);
+		g.drawImage(Player_Animations[row][animationIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), 60, 55, null);
+		drawHitbox(g);
 	}
 
 	// ---------------------------------------------------------------
@@ -82,6 +97,12 @@ public class Player extends Entity {
 			}
 
 	}
+	
+	public void loadlvlData(int[][] lvlData) {
+		this.lvlData = lvlData;
+	}
+	
+	
 
 	// ---------------------------------------------------------------
 	//  Logica de animacion
@@ -132,22 +153,35 @@ public class Player extends Entity {
 
 	private void updatePosition() {
 		moving = false;
+		if(!left && !right && !up && !down)
+			return;
+		
+		float xSpeed = 0, ySpeed = 0;
+		
 
 		if (left && !right) {
-			x -= playerSpeed;
-			moving      = true;
+			xSpeed -= playerSpeed;
 			facingRight = false; // Actualizar direccion al moverse
 		} else if (right && !left) {
-			x += playerSpeed;
-			moving      = true;
+			xSpeed = playerSpeed;
 			facingRight = true;
 		}
 
 		if (up && !down) {
-			y -= playerSpeed;
-			moving = true;
+			ySpeed -= playerSpeed;
 		} else if (down && !up) {
-			y += playerSpeed;
+			ySpeed = playerSpeed;
+		}
+		/*
+		if(CanMoveHere(x+xSpeed, y+ySpeed, width, height, lvlData)) {
+			this.x += xSpeed;
+			this.y += ySpeed; 
+			moving = true;
+		}
+		*/
+		if(CanMoveHere(hitbox.x+xSpeed, hitbox.y+ySpeed, hitbox.width, hitbox.height, lvlData)) {
+			hitbox.x += xSpeed;
+			hitbox.y += ySpeed; 
 			moving = true;
 		}
 	}
