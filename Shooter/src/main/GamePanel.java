@@ -21,6 +21,9 @@ import inputs.MouseInputs;
 import static utils.Constants.PlayerConstants.*;
 import static utils.Constants.Directions.*;
 
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
+
 
 public class GamePanel extends JPanel{
 	
@@ -41,9 +44,10 @@ public class GamePanel extends JPanel{
 
 
 	private void SetPanelSize() {
-		Dimension size = new Dimension(900,600);
+		Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
 		setMinimumSize(size);
 		setPreferredSize(size);
+		System.out.println("size: " + GAME_WIDTH + " : " + GAME_HEIGHT);
 	}
 	
 	public void paintComponent(Graphics g) {

@@ -15,6 +15,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import utils.LoadSave;
+
 public class Player extends Entity {
 
 	// ---------------------------------------------------------------
@@ -68,8 +70,7 @@ public class Player extends Entity {
 	private void loadAnimations() {
 		InputStream is = getClass().getResourceAsStream("/Player_01.png");
 
-		try {
-			BufferedImage img = ImageIO.read(is);
+			BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
 			// 8 filas (0-7), 5 columnas (max frames de ATTACKING)
 			Player_Animations = new BufferedImage[8][5];
@@ -80,15 +81,6 @@ public class Player extends Entity {
 				}
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	// ---------------------------------------------------------------
