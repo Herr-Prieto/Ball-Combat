@@ -1,64 +1,40 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
+import static main.Game.*;
 
+public class GamePanel extends JPanel {
 
-import static utils.Constants.PlayerConstants.*;
-import static utils.Constants.Directions.*;
+    private Game game;
 
-import static main.Game.GAME_HEIGHT;
-import static main.Game.GAME_WIDTH;
+    public GamePanel(Game game) {
+        this.game = game;
+        MouseInputs mi = new MouseInputs(this);
+        setPanelSize();
+        addKeyListener(new KeyboardInputs(this));
+        addMouseListener(mi);
+        addMouseMotionListener(mi);
+    }
 
+    private void setPanelSize() {
+        Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
+    }
 
-public class GamePanel extends JPanel{
-	
-	private MouseInputs MouseInputs;
-	private Game game;
-	
-	public GamePanel(Game game) {
-		MouseInputs = new MouseInputs(this);
-		this.game = game;
-		
-		
-		SetPanelSize();
-		addKeyListener(new KeyboardInputs(this));
-		addMouseListener(new MouseInputs(this));
-		addMouseMotionListener(new MouseInputs(this));
-	}
-	
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        game.render(g);
+    }
 
-
-	private void SetPanelSize() {
-		Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
-		setMinimumSize(size);
-		setPreferredSize(size);
-		System.out.println("size: " + GAME_WIDTH + " : " + GAME_HEIGHT);
-	}
-	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		
-		game.render(g);
-	}
-	
-	public Game getGame() {
-		return game;
-		
-	}
-
-	}
+    public Game getGame() { return game; }
+}

@@ -1,9 +1,3 @@
-/**
- * 
- */
-/**
- * 
- */
 module Shooter {
-	requires java.desktop;
+    requires java.desktop;
 }

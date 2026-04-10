@@ -1,58 +1,20 @@
 package inputs;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
+import java.awt.event.*;
 import main.GamePanel;
 
-public class MouseInputs implements MouseListener, MouseMotionListener{
+public class MouseInputs implements MouseListener, MouseMotionListener {
 
-	private GamePanel GamePanel;
-	
-	public MouseInputs(GamePanel GamePanel) {
-		this.GamePanel = GamePanel;
-		
-	}
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    private GamePanel panel;
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		
-	}
+    public MouseInputs(GamePanel panel) { this.panel = panel; }
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override public void mousePressed (MouseEvent e) { panel.getGame().mousePressed(e); }
+    @Override public void mouseReleased(MouseEvent e) { panel.getGame().mouseReleased(e); }
+    @Override public void mouseMoved   (MouseEvent e) { panel.getGame().mouseMoved(e); }
+    @Override public void mouseDragged (MouseEvent e) { panel.getGame().mouseDragged(e); }
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    @Override public void mouseClicked (MouseEvent e) {}
+    @Override public void mouseEntered (MouseEvent e) {}
+    @Override public void mouseExited  (MouseEvent e) {}
 }
